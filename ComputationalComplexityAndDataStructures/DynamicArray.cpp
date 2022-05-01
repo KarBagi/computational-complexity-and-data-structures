@@ -1,7 +1,10 @@
 #include <iostream>
 #include <fstream>
 #include <String>
+#include <windows.h>
+#include <ctime>
 #include "DynamicArray.h"
+#include "Stoper.h"
 
 using namespace std;
 
@@ -37,7 +40,6 @@ void DynamicArray::readFromFile() {
 	}
 
 	else {
-		//mainArray = new int[this -> size + 1];
 		int newSize = 0;
 
 		getline(file, line);
@@ -106,6 +108,27 @@ void DynamicArray::addElement(int value, int position) {
 	mainArray = newArray;
 }
 
+void DynamicArray::removeElement(int position) {
+	int* newArray = new int[this->size - 1];
+
+	if (mainArray != NULL) {
+		for (int i = 0; i <= this->size; i++) {
+			if (i < position) {
+				newArray[i] = mainArray[i];
+			}
+			else if (i == position) continue;
+			else if (i > position) {
+				newArray[i - 1] = mainArray[i];
+			}
+		}
+
+		delete[] mainArray;
+	}
+
+	this->size--;
+	mainArray = newArray;
+}
+
 void DynamicArray::showArray() {
 	for (int i = 0; i < this -> size; i++) {
 		cout << mainArray[i] << " ";
@@ -113,6 +136,30 @@ void DynamicArray::showArray() {
 	}
 
 	cout << endl;
+}
+
+int DynamicArray::findElement(int value) {
+	for (int i = 0; i < this->size; i++) {
+		if (mainArray[i] == value) {
+			value = i;
+
+			return value;
+
+			break;
+		}
+		else if (i == this->size - 1) {
+			return 2147483647;
+		}
+
+		else if (mainArray[i] != value) continue;
+	}
+}
+
+void DynamicArray::generateArray(int value) {
+	srand(time(NULL));
+	for (int i = 0; i < value; i++) {
+		addElementToEnd(rand() % 100);
+	}
 }
 
 void DynamicArray::userInterface() {
@@ -141,6 +188,15 @@ void DynamicArray::userInterface() {
 		switch (choise) {
 		case 1: {
 			readFromFile();
+
+			break;
+		}
+		case 2: {
+			cout << "Ile elementow chcesz wygenerowac: ";
+			cin >> value;
+			cout << endl;
+
+			generateArray(value);
 
 			break;
 		}
@@ -201,10 +257,12 @@ void DynamicArray::userInterface() {
 
 			switch (choise1) {
 			case 1: {
+				removeElement(0);
 
 				break;
 			}
 			case 2: {
+				removeElement(this->size);
 
 				break;
 			}
@@ -212,9 +270,29 @@ void DynamicArray::userInterface() {
 				cout << "Na jakiej pozycji:";
 				cin >> position;
 
+				removeElement(position);
+
 				break;
 			}
 			}
+
+			break;
+		}
+		case 5: {
+			cout << "Podaj wartosc elementu jakiego chcesz znalezc: ";
+			cin >> value;
+			cout << endl;
+
+			position = findElement(value);
+
+			if (position == 2147483647) {
+				cout << "Nie ma takiej liczby w tablicy" << endl;
+			}
+			else {
+				cout << value << " znajduje sie na " << position << " pozycji" << endl;
+			}
+
+			break;
 		}
 		case 6: {
 			showArray();

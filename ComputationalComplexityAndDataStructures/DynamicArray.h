@@ -11,8 +11,9 @@ public:
 	void addElementToFront(int value);
 	void addElementToEnd(int value);
 	void addElement(int value, int position);
-	void deleteElement();
-	void generateArray();
+	void removeElement(int position);
+	int findElement(int value);
+	void generateArray(int value);
 	void readFromFile();
 	void showArray();
 
