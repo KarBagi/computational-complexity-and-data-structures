@@ -1,6 +1,7 @@
 #include <iostream>
 #include <windows.h>
 #include "DynamicArray.h"
+#include "DoublyLinkedList.h"
 
 using namespace std;
 
@@ -11,7 +12,7 @@ int main() {
         choise = 0;
 
         DynamicArray dynArr(0);          //towrzymy obiekt dynArr klasy DynamicArray z 1000-cioma elementami
-        //DoublyLinkedList<int> list{};       //tworzymy obiekt list klasy DoublyLinkedList
+        DoublyLinkedList<int> list{};       //tworzymy obiekt list klasy DoublyLinkedList
         //Heap heap;
 
         cout << "1. Dynamiczna tablica" << endl;
@@ -24,7 +25,7 @@ int main() {
 
         switch (choise) {
         case 1: system("cls"); dynArr.userInterface(); break;       //uruchamiamy interfejs 
-        //case 2: list.userInterface(); getchar(); break;         //uzytkownika poszczegolnych klas
+        case 2: system("cls"); list.userInterface(); break;         //uzytkownika poszczegolnych klas
         //case 3: heap.userInterface(); getchar(); break;
         }
     } while (choise != 4);

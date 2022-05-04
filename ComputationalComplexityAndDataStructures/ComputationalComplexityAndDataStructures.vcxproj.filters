@@ -32,5 +32,11 @@
     <ClInclude Include="Stoper.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="Node.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DoublyLinkedList.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -8,6 +8,8 @@
 
 using namespace std;
 
+Stoper stoper;
+
 DynamicArray::DynamicArray(int s) {		//konstruktor
 	size = s;
 	mainArray = new int[size];
@@ -48,29 +50,54 @@ void DynamicArray::readFromFile() {
 
 		for (int i = 0; i < newSize; i++) {
 			getline(file, line);
-			addElementToEnd(atoi(line.c_str()));
+			addElementToEnd(atoi(line.c_str()), 1);
 		}
 		file.close();
 	}
 }
 
-void DynamicArray::addElementToFront(int value) {
+void DynamicArray::addElementToFront(int value, int repeat) {
 	int* newArray = new int[this -> size + 1];
-	
+	double* newTimeArray = new double[repeat];
+
+	for (int t = 0; t < repeat; t++) {
+
+		stoper.startCounter();
+
 		newArray[0] = value;
 
 		if (mainArray != NULL) {
 			for (int i = 0; i < this->size; i++) {
 				newArray[i + 1] = mainArray[i];
 			}
-			delete[] mainArray;
 		}
 
-	this -> size++;
+
+		this->size++;
+		mainArray = newArray;
+		delete[] mainArray;
+
+		newTimeArray[t] = stoper.getCounter();
+
+		removeElement(0, 1);
+
+		cout << newTimeArray[t];
+	}
+
+	newArray[0] = value;
+
+	if (mainArray != NULL) {
+		for (int i = 0; i < this->size; i++) {
+			newArray[i + 1] = mainArray[i];
+		}
+	}
+
+	this->size++;
 	mainArray = newArray;
+	delete[] mainArray;
 }
 
-void DynamicArray::addElementToEnd(int value) {
+void DynamicArray::addElementToEnd(int value, int repeat) {
 	int* newArray = new int[this->size + 1];
 
 	newArray[this -> size] = value;
@@ -86,7 +113,7 @@ void DynamicArray::addElementToEnd(int value) {
 	mainArray = newArray;
 }
 
-void DynamicArray::addElement(int value, int position) {
+void DynamicArray::addElement(int value, int position, int repeat) {
 	int* newArray = new int[this->size + 1];
 
 	if (mainArray != NULL) {
@@ -108,7 +135,7 @@ void DynamicArray::addElement(int value, int position) {
 	mainArray = newArray;
 }
 
-void DynamicArray::removeElement(int position) {
+void DynamicArray::removeElement(int position, int repeat) {
 	int* newArray = new int[this->size - 1];
 
 	if (mainArray != NULL) {
@@ -121,12 +148,12 @@ void DynamicArray::removeElement(int position) {
 				newArray[i - 1] = mainArray[i];
 			}
 		}
-
-		delete[] mainArray;
 	}
 
 	this->size--;
 	mainArray = newArray;
+
+	delete[] mainArray;
 }
 
 void DynamicArray::showArray() {
@@ -138,7 +165,7 @@ void DynamicArray::showArray() {
 	cout << endl;
 }
 
-int DynamicArray::findElement(int value) {
+int DynamicArray::findElement(int value, int repeat) {
 	for (int i = 0; i < this->size; i++) {
 		if (mainArray[i] == value) {
 			value = i;
@@ -158,7 +185,7 @@ int DynamicArray::findElement(int value) {
 void DynamicArray::generateArray(int value) {
 	srand(time(NULL));
 	for (int i = 0; i < value; i++) {
-		addElementToEnd(rand() % 100);
+		addElementToEnd(rand() % 100, 1);
 	}
 }
 
@@ -198,6 +225,8 @@ void DynamicArray::userInterface() {
 
 			generateArray(value);
 
+			cout << "Wygenerowano " << value << " elementow" << endl;
+
 			break;
 		}
 		case 3: {
@@ -216,7 +245,7 @@ void DynamicArray::userInterface() {
 				cin >> value;
 				cout << endl;
 
-				addElementToFront(value);
+				addElementToFront(value, 3);
 
 				break;
 			}
@@ -225,7 +254,7 @@ void DynamicArray::userInterface() {
 				cin >> value;
 				cout << endl;
 
-				addElementToEnd(value);
+				addElementToEnd(value, 1);
 
 				break;
 			}
@@ -238,7 +267,7 @@ void DynamicArray::userInterface() {
 				cin >> value;
 				cout << endl;
 
-				addElement(value, position);
+				addElement(value, position, 1);
 
 				break;
 			}
@@ -257,12 +286,12 @@ void DynamicArray::userInterface() {
 
 			switch (choise1) {
 			case 1: {
-				removeElement(0);
+				removeElement(0, 1);
 
 				break;
 			}
 			case 2: {
-				removeElement(this->size);
+				removeElement(this->size, 1);
 
 				break;
 			}
@@ -270,7 +299,7 @@ void DynamicArray::userInterface() {
 				cout << "Na jakiej pozycji:";
 				cin >> position;
 
-				removeElement(position);
+				removeElement(position, 1);
 
 				break;
 			}
@@ -283,7 +312,7 @@ void DynamicArray::userInterface() {
 			cin >> value;
 			cout << endl;
 
-			position = findElement(value);
+			position = findElement(value, 1);
 
 			if (position == 2147483647) {
 				cout << "Nie ma takiej liczby w tablicy" << endl;

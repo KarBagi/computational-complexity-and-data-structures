@@ -144,7 +144,9 @@
     <ClCompile Include="Stoper.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DoublyLinkedList.h" />
     <ClInclude Include="DynamicArray.h" />
+    <ClInclude Include="Node.h" />
     <ClInclude Include="Stoper.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
