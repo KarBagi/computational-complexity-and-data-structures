@@ -107,7 +107,7 @@ void Heap::readFromFile(int fileN) {
 	}
 }
 
-string Heap::show() {
+string Heap::show() {			//skonstruowanie i wyswietlenie kopca 
 	int height = floor(log2(this->size));
 	int width = pow(2, height) * 2;
 	int aHeight = 0;
@@ -197,6 +197,8 @@ void Heap::repairHeap() {																	//przywrócenie w³asnoœci kopca
 	}
 }
 
+//pomiary czasow dla poszczegolnych algorytmow
+
 double Heap::testAdd() {
 	Stoper stoper;
 
@@ -245,7 +247,7 @@ double Heap::testRemove() {
 	return timeAvg;
 }
 
-void Heap::userInterface() {
+void Heap::userInterface() {		//interfejs uzytkownika
 	int userChoice;
 
 	do {
