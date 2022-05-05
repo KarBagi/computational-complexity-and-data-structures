@@ -2,18 +2,19 @@
 #include <windows.h>
 #include "DynamicArray.h"
 #include "DoublyLinkedList.h"
+#include "Heap.h"
 
 using namespace std;
 
 int main() {
     int choise = 0;
 
+    DynamicArray dynArr(0);          //towrzymy obiekt dynArr klasy DynamicArray z 1000-cioma elementami
+    DoublyLinkedList<int> list{};       //tworzymy obiekt list klasy DoublyLinkedList
+    Heap heap;
+
     do {      // nieskonczona petla zeby program sie sam nie wylaczal
         choise = 0;
-
-        DynamicArray dynArr(0);          //towrzymy obiekt dynArr klasy DynamicArray z 1000-cioma elementami
-        DoublyLinkedList<int> list{};       //tworzymy obiekt list klasy DoublyLinkedList
-        //Heap heap;
 
         cout << "1. Dynamiczna tablica" << endl;
         cout << "2. Lista dwukierunkowa" << endl;
@@ -26,7 +27,7 @@ int main() {
         switch (choise) {
         case 1: system("cls"); dynArr.userInterface(); break;       //uruchamiamy interfejs 
         case 2: system("cls"); list.userInterface(); break;         //uzytkownika poszczegolnych klas
-        //case 3: heap.userInterface(); getchar(); break;
+        case 3: system("cls"); heap.userInterface(); break;
         }
     } while (choise != 4);
 

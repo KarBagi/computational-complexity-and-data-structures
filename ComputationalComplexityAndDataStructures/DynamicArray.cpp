@@ -27,12 +27,17 @@ DynamicArray::~DynamicArray() {		//destruktor
 	delete[] mainArray;
 }
 
-void DynamicArray::readFromFile() {
+void DynamicArray::readFromFile(int fileN) {		//wczytywanie zawartosci pliku
 	string filename;
 	string line;
 
-	cout << "Podaj nazwe pliku: ";
-	cin >> filename;
+	if (fileN == 0) {
+		cout << "Podaj nazwe pliku: ";
+		cin >> filename;
+	}
+	else if (fileN == 1) {
+		filename = "data.txt";
+	}
 
 	ifstream file;
 	file.open(filename);
@@ -50,146 +55,254 @@ void DynamicArray::readFromFile() {
 
 		for (int i = 0; i < newSize; i++) {
 			getline(file, line);
-			addElementToEnd(atoi(line.c_str()), 1);
+			addElementToEnd(atoi(line.c_str()));
 		}
 		file.close();
 	}
 }
 
-void DynamicArray::addElementToFront(int value, int repeat) {
-	int* newArray = new int[this -> size + 1];
-	double* newTimeArray = new double[repeat];
+void DynamicArray::addElementToFront(int value) {			//dodanie elementu na poczatek tablicy
+	int* newArray = new int[this -> size + 1];				//stworzenie nowej tablicy o 1 wieksza od poprzedniej, w ktorej zapiszemy dodatkowa wartosc
 
-	for (int t = 0; t < repeat; t++) {
+		newArray[0] = value;			//na pierwsze miejsce w nowej tablicy wpisujemy zadana wartosc
 
-		stoper.startCounter();
-
-		newArray[0] = value;
-
-		if (mainArray != NULL) {
+		if (mainArray != NULL) {			//sprawdzamy czy tablica nie jest pusta
 			for (int i = 0; i < this->size; i++) {
-				newArray[i + 1] = mainArray[i];
+				newArray[i + 1] = mainArray[i];				//wszystkie nastepne wartosci przepisujemy do nowej tablicy
 			}
-		}
+			delete[] mainArray;		//usuwamy glowna tablice
+		}	
 
-
-		this->size++;
-		mainArray = newArray;
-		delete[] mainArray;
-
-		newTimeArray[t] = stoper.getCounter();
-
-		removeElement(0, 1);
-
-		cout << newTimeArray[t];
-	}
-
-	newArray[0] = value;
-
-	if (mainArray != NULL) {
-		for (int i = 0; i < this->size; i++) {
-			newArray[i + 1] = mainArray[i];
-		}
-	}
-
-	this->size++;
-	mainArray = newArray;
-	delete[] mainArray;
+	this->size++;			//powiekszamy rozmiar domyslnej tablicy o 1
+	mainArray = newArray;		//przepisujemy nowa tablice do glownej
 }
 
-void DynamicArray::addElementToEnd(int value, int repeat) {
-	int* newArray = new int[this->size + 1];
+void DynamicArray::addElementToEnd(int value) {		//dodanie elementu na koniec tablicy
+	int* newArray = new int[this->size + 1];				//stworzenie nowej tablicy o 1 wieksza od poprzedniej, w ktorej zapiszemy dodatkowa wartosc
 
-	newArray[this -> size] = value;
+	newArray[this -> size] = value;			//na ostatnie miejsce w nowej tablicy zapisujemy zadana wartosc
 
-	if (mainArray != NULL) {
+	if (mainArray != NULL) {			//sprawdzamy czy tablica nie jest pusta
 		for (int i = 0; i < this->size; i++) {
-			newArray[i] = mainArray[i];
+			newArray[i] = mainArray[i];		//wszystkie poprzednie liczby przepisujemy do nowej tablicy
 		}
-		delete[] mainArray;
+		delete[] mainArray;		//usuwamy glowna tablice
 	}
 
-	this->size++;
-	mainArray = newArray;
+	this->size++;			//powiekszamy rozmiar domyslnej tablicy o 1
+	mainArray = newArray;		//przepisujemy nowa tablice do glownej
 }
 
-void DynamicArray::addElement(int value, int position, int repeat) {
-	int* newArray = new int[this->size + 1];
+void DynamicArray::addElement(int value, int position) {		//dodanie elementu da zadana pozycje tablicy
+	int* newArray = new int[this->size + 1];				//stworzenie nowej tablicy o 1 wieksza od poprzedniej, w ktorej zapiszemy dodatkowa wartosc
 
-	if (mainArray != NULL) {
+	if (mainArray != NULL) {			//sprawdzamy czy tablica nie jest pusta
 		for (int i = 0; i <= this->size; i++) {
 			if (i < position) {
-				newArray[i] = mainArray[i];
+				newArray[i] = mainArray[i];			//jezeli wartosc i jest mniejsza od zadanej pozycji to elementy sa na tych samych indeksach
 			}
 			else if (i == position) {
-				newArray[i] = value;
+				newArray[i] = value;			//jezeli i == pozycja, wpisujemy w to miejsce zadana wartosc
 			}
 			else if (i > position) {
-				newArray[i] = mainArray[i-1];
+				newArray[i] = mainArray[i-1];		//wszystkie wartosci powyzej maja indeks o 1 wiekszy
 			}
 		}
-		delete[] mainArray;
+		delete[] mainArray; 		//usuwamy glowna tablice
 	}
 
-	this->size++;
-	mainArray = newArray;
+	this->size++;			//powiekszamy rozmiar domyslnej tablicy o 1
+	mainArray = newArray;		//przepisujemy nowa tablice do glownej
 }
 
-void DynamicArray::removeElement(int position, int repeat) {
-	int* newArray = new int[this->size - 1];
+void DynamicArray::removeElement(int position) {		//usuniecie elementu z tablicy
+	int* newArray = new int[this->size - 1];				//stworzenie nowej tablicy o 1 wieksza od poprzedniej, w ktorej zapiszemy dodatkowa wartosc
 
-	if (mainArray != NULL) {
+	if (mainArray != NULL) {			//sprawdzamy czy tablica nie jest pusta
 		for (int i = 0; i <= this->size; i++) {
 			if (i < position) {
-				newArray[i] = mainArray[i];
+				newArray[i] = mainArray[i];			//jezeli i jest < od zadanej pozycji to wszystkie wartosci sa takie same
 			}
-			else if (i == position) continue;
+			else if (i == position) continue;		//jezeli i jest rowne wartosci position kontynuujemy algorytm bez jej wpisywania
 			else if (i > position) {
-				newArray[i - 1] = mainArray[i];
+				newArray[i - 1] = mainArray[i];		//reszte przepisujemy z indeksem o 1 mniejszym
 			}
 		}
 	}
+	delete[] mainArray; 		//usuwamy glowna tablice
 
-	this->size--;
-	mainArray = newArray;
-
-	delete[] mainArray;
+	this->size--;			//zmniejszamy rozmiar domyslnej tablicy o 1
+	mainArray = newArray;		//przepisujemy nowa tablice do glownej
 }
 
 void DynamicArray::showArray() {
 	for (int i = 0; i < this -> size; i++) {
-		cout << mainArray[i] << " ";
+		cout << mainArray[i] << " ";		//wyswietlenie calej zawartosci tablicy oraz indeksow poszczegolnych wartosci
 		cout << i << endl;
 	}
 
 	cout << endl;
 }
 
-int DynamicArray::findElement(int value, int repeat) {
+int DynamicArray::findElement(int value) {		//wyszukanie wartosci
 	for (int i = 0; i < this->size; i++) {
 		if (mainArray[i] == value) {
 			value = i;
 
-			return value;
-
+			return value;		//jezeli znajdziemy poszukiwana wartosc zwracamy 'i'
+			 
 			break;
 		}
 		else if (i == this->size - 1) {
-			return 2147483647;
+			return 2147483647;			//jezeli nie ma takiej wartosci w tablicy zwracamy maksymalna wartosc Int
 		}
 
 		else if (mainArray[i] != value) continue;
 	}
 }
 
-void DynamicArray::generateArray(int value) {
+void DynamicArray::generateArray(int value) {			//generowanie tablicy o zadanej wielkosci
 	srand(time(NULL));
 	for (int i = 0; i < value; i++) {
-		addElementToEnd(rand() % 100, 1);
+		addElementToEnd(rand() % 100);
 	}
 }
 
-void DynamicArray::userInterface() {
+//pomiary czasow dla poszczegolnych algorytmow 
+
+double DynamicArray::testAddElementToFront() {	
+	int numberOfTests = 10000;
+	double timeSum = 0;
+	double timeAvg = 0;
+
+	readFromFile(1);
+
+	for (int i = 0; i < numberOfTests; i++) {
+		stoper.startCounter();
+
+		addElementToFront(5);
+
+		timeSum += stoper.getCounter();
+
+		removeElement(0);
+	}
+
+	timeAvg = timeSum / numberOfTests;
+
+	return timeAvg;
+}
+
+double DynamicArray::testAddElementToEnd(int position) {
+	int numberOfTests = 10000;
+	double timeSum = 0;
+	double timeAvg = 0;
+
+	readFromFile(1);
+
+	for (int i = 0; i < numberOfTests; i++) {
+		stoper.startCounter();
+
+		addElementToEnd(5);
+
+		timeSum += stoper.getCounter();
+
+		removeElement(position);
+	}
+
+	timeAvg = timeSum / numberOfTests;
+
+	return timeAvg;
+}
+
+double DynamicArray::testAddElement() {
+	int numberOfTests = 10000;
+	double timeSum = 0;
+	double timeAvg = 0;
+
+	readFromFile(1);
+
+	for (int i = 0; i < numberOfTests; i++) {
+		stoper.startCounter();
+
+		addElement(5, 4);
+
+		timeSum += stoper.getCounter();
+
+		removeElement(4);
+	}
+
+	timeAvg = timeSum / numberOfTests;
+
+	return timeAvg;
+}
+
+double DynamicArray::testRemoveElementFront() {
+	int numberOfTests = 10000;
+	double timeSum = 0;
+	double timeAvg = 0;
+
+	readFromFile(1);
+
+	for (int i = 0; i < numberOfTests; i++) {
+		stoper.startCounter();
+
+		removeElement(0);
+
+		timeSum += stoper.getCounter();
+
+		addElementToFront(6);
+	}
+
+	timeAvg = timeSum / numberOfTests;
+
+	return timeAvg;
+}
+
+double DynamicArray::testRemoveElementEnd(int position) {
+	int numberOfTests = 10000;
+	double timeSum = 0;
+	double timeAvg = 0;
+
+	readFromFile(1);
+
+	for (int i = 0; i < numberOfTests; i++) {
+		stoper.startCounter();
+
+		removeElement(position);
+
+		timeSum += stoper.getCounter();
+
+		addElementToEnd(position - 1);
+	}
+
+	timeAvg = timeSum / numberOfTests;
+
+	return timeAvg;
+}
+
+double DynamicArray::testRemoveElement() {
+	int numberOfTests = 10000;
+	double timeSum = 0;
+	double timeAvg = 0;
+
+	readFromFile(1);
+
+	for (int i = 0; i < numberOfTests; i++) {
+		stoper.startCounter();
+
+		removeElement(5);
+
+		timeSum += stoper.getCounter();
+
+		addElement(34, 5);
+	}
+
+	timeAvg = timeSum / numberOfTests;
+
+	return timeAvg;
+}
+
+void DynamicArray::userInterface() {		//interfejs uzytkownika
 	int choise;
 	int choise1;
 	int position;
@@ -206,7 +319,8 @@ void DynamicArray::userInterface() {
 		cout << "4. Usuniecie elementu z tablicy" << endl;
 		cout << "5. Znajdz element" << endl;
 		cout << "6. Wyswietl zawartosc tablicy" << endl;
-		cout << "7. Wyjscie" << endl;
+		cout << "7. Pomiary czasu " << endl;
+		cout << "8. Wyjscie" << endl;
 
 		cout << "wybierz opcje: ";
 		cin >> choise;
@@ -214,7 +328,7 @@ void DynamicArray::userInterface() {
 
 		switch (choise) {
 		case 1: {
-			readFromFile();
+			readFromFile(0);
 
 			break;
 		}
@@ -245,7 +359,7 @@ void DynamicArray::userInterface() {
 				cin >> value;
 				cout << endl;
 
-				addElementToFront(value, 3);
+				addElementToFront(value);
 
 				break;
 			}
@@ -254,7 +368,7 @@ void DynamicArray::userInterface() {
 				cin >> value;
 				cout << endl;
 
-				addElementToEnd(value, 1);
+				addElementToEnd(value);
 
 				break;
 			}
@@ -267,7 +381,7 @@ void DynamicArray::userInterface() {
 				cin >> value;
 				cout << endl;
 
-				addElement(value, position, 1);
+				addElement(value, position);
 
 				break;
 			}
@@ -286,12 +400,12 @@ void DynamicArray::userInterface() {
 
 			switch (choise1) {
 			case 1: {
-				removeElement(0, 1);
+				removeElement(0);
 
 				break;
 			}
 			case 2: {
-				removeElement(this->size, 1);
+				removeElement(this->size);
 
 				break;
 			}
@@ -299,7 +413,7 @@ void DynamicArray::userInterface() {
 				cout << "Na jakiej pozycji:";
 				cin >> position;
 
-				removeElement(position, 1);
+				removeElement(position);
 
 				break;
 			}
@@ -312,7 +426,7 @@ void DynamicArray::userInterface() {
 			cin >> value;
 			cout << endl;
 
-			position = findElement(value, 1);
+			position = findElement(value);
 
 			if (position == 2147483647) {
 				cout << "Nie ma takiej liczby w tablicy" << endl;
@@ -328,7 +442,18 @@ void DynamicArray::userInterface() {
 
 			break;
 		}
+		case 7: {
+			cout << "Dodawanie na poczatek tablicy dla 10000 powtorzen: " << testAddElementToFront()  << " ns"<< endl;
+			cout << "Dodawanie na koniec tablicy dla 10000 powtorzen: " << testAddElementToEnd(this->size) << " ns" << endl;
+			cout << "Dodawanie na losowej pozycji dla 10000 powtorzen: " << testAddElement() << " ns" << endl << endl;
+
+			cout << "Usuniecie elementu z poczatku tablicy dla 10000 powtorzen: " << testRemoveElementFront() << " ns" << endl;
+			cout << "Usuniecie elementu z konca tablicy dla 10000 powtorzen: " << testRemoveElementEnd(this->size) << " ns" << endl;
+			cout << "Usuniecie elementu ze srodka tablicy dla 10000 powtorzen: " << testRemoveElement() << " ns" << endl;
+
+			break;
+		}
 		}
 
-	} while (choise != 7);
+	} while (choise != 8);
 }

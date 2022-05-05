@@ -141,11 +141,13 @@
   <ItemGroup>
     <ClCompile Include="ComputationalComplexityAndDataStructures.cpp" />
     <ClCompile Include="DynamicArray.cpp" />
+    <ClCompile Include="Heap.cpp" />
     <ClCompile Include="Stoper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DoublyLinkedList.h" />
     <ClInclude Include="DynamicArray.h" />
+    <ClInclude Include="Heap.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="Stoper.h" />
   </ItemGroup>

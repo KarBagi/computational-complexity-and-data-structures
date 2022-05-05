@@ -13,7 +13,7 @@ void Stoper::startCounter() {			//stoper
 	if (!QueryPerformanceFrequency(&li))
 		cout << "QueryPerformanceFrequency failed!\n";			//zabezpieczenie przed nieprawidlowym dzialaniemm 
 																//stopera
-	PCFreq = double(li.QuadPart) / 1000.0;
+	PCFreq = double(li.QuadPart) / 1000000000.0;
 
 	QueryPerformanceCounter(&li);
 	CounterStart = li.QuadPart;

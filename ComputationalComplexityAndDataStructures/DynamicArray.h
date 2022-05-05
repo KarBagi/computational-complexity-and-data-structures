@@ -8,14 +8,20 @@ public:
 	DynamicArray(int size);
 	~DynamicArray();
 
-	void addElementToFront(int value, int repeat);
-	void addElementToEnd(int value, int repeat);
-	void addElement(int value, int position, int repeat);
-	void removeElement(int position, int repeat);
-	int findElement(int value, int repeat);
+	void addElementToFront(int value);
+	void addElementToEnd(int value);
+	void addElement(int value, int position);
+	void removeElement(int position);
+	int findElement(int value);
 	void generateArray(int value);
-	void readFromFile();
+	void readFromFile(int fileN);
 	void showArray();
+	double testAddElementToFront();
+	double testAddElementToEnd(int position);
+	double testAddElement();
+	double testRemoveElementFront();
+	double testRemoveElementEnd(int position);
+	double testRemoveElement();
 
 	void userInterface();
 };

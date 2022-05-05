@@ -8,6 +8,7 @@
 #include <windows.h>
 #include <ctime>
 #include "Node.h"
+#include "Stoper.h"
 
 using namespace std;
 
@@ -24,7 +25,7 @@ public:
 
 	Node<T>* get(int index) const;
 
-	void readFromFile();
+	void readFromFile(int fileN);
 	void generateList(int value);
 	void addElementHead(int value);
 	void addElementBack(int value);
@@ -34,6 +35,11 @@ public:
 	int search(const T& value) const;
 	void show() const;
 	void userInterface();
+	double testAddElementHead();
+	double testAddElementBack(int position);
+	double testAddElement();
+	double testRemoveElementFront();
+	double testRemoveElement(int position);
 
 };
 
@@ -72,12 +78,17 @@ void DoublyLinkedList<T>::generateList(int value) {
 }
 
 template <class T>
-void DoublyLinkedList<T>::readFromFile() {
+void DoublyLinkedList<T>::readFromFile(int fileN) {			//wczytanie zawartosci pliku
 	string filename;
 	string line;
 
-	cout << "Podaj nazwe pliku: ";
-	cin >> filename;
+	if (fileN == 0) {
+		cout << "Podaj nazwe pliku: ";
+		cin >> filename;
+	}
+	else if (fileN == 1) {
+		filename = "data.txt";
+	}
 
 	ifstream file;
 	file.open(filename);
@@ -124,7 +135,7 @@ template <class T>
 void DoublyLinkedList<T>::addElementBack(int value) {
 	if (counter == 0)
 	{
-		addElementHead(value);
+		addElementHead(value);		//jezeli lista ma rozmiar == 0 dodajemy do poczatku
 		return;
 	}
 
@@ -139,18 +150,18 @@ void DoublyLinkedList<T>::addElementBack(int value) {
 template <class T> 
 void DoublyLinkedList<T>::addElement(int value, int position) {
 	if (position < 0 || position > counter) {
-		return;
+		return;				//zabezpieczenia przed wpisaniem zlej wartosci
 	}
 
 	if (position == 0)
 	{
-		addElementHead(value);
+		addElementHead(value);			//jezeli lista ma rozmiar == 0 dodajemy do poczatku
 		return;
 	}
 
 	else if (position == counter)
 	{
-		addElementBack(value);
+		addElementBack(value);			//jezeli zadana pozycja == rozmiar listy dodajemy element na koniec
 		return;
 	}
 
@@ -260,16 +271,16 @@ int DoublyLinkedList<T>::search(const T& value) const {
 
 	while (temp_node->value != value)
 	{
-		index++;
+		index++;			
 		temp_node = temp_node->next;
 
 		if (!temp_node)
 		{
-			return -1;
+			return -1;			//jezeli nie ma szukanej liczby w liscie, zwracamy -1
 		}
 	}
 
-	return index;
+	return index;			//zwracamy pozycje na jakiej znajduje sie szukana wartosc
 }
 
 template <class T>
@@ -283,8 +294,135 @@ void DoublyLinkedList<T>::show() const {
 	cout << endl;
 }
 
+//pomiary czasow dla poszczegolnych algorytmow 
+
 template <class T> 
-void DoublyLinkedList<T>::userInterface() {
+double DoublyLinkedList<T>::testAddElementHead() {
+	Stoper stoper;
+
+	int numberOfTests = 10000;
+	double timeSum = 0;
+	double timeAvg = 0;
+
+	readFromFile(1);
+
+	for (int i = 0; i < numberOfTests; i++) {
+		stoper.startCounter();
+
+		addElementHead(5);
+
+		timeSum += stoper.getCounter();
+
+		removeElementFront();
+	}
+
+	timeAvg = timeSum / numberOfTests;
+
+	return timeAvg;
+}
+
+template <class T>
+double DoublyLinkedList<T>::testAddElementBack(int position) {
+	Stoper stoper;
+
+	int numberOfTests = 10000;
+	double timeSum = 0;
+	double timeAvg = 0;
+
+	readFromFile(1);
+
+	for (int i = 0; i < numberOfTests; i++) {
+		stoper.startCounter();
+
+		addElementBack(5);
+
+		timeSum += stoper.getCounter();
+
+		removeElement(position);
+	}
+
+	timeAvg = timeSum / numberOfTests;
+
+	return timeAvg;
+}
+
+template <class T>
+double DoublyLinkedList<T>::testAddElement() {
+	Stoper stoper;
+
+	int numberOfTests = 10000;
+	double timeSum = 0;
+	double timeAvg = 0;
+
+	readFromFile(1);
+
+	for (int i = 0; i < numberOfTests; i++) {
+		stoper.startCounter();
+
+		addElement(5, 4);
+
+		timeSum += stoper.getCounter();
+
+		removeElement(4);
+	}
+
+	timeAvg = timeSum / numberOfTests;
+
+	return timeAvg;
+}
+
+template <class T> 
+double DoublyLinkedList<T>::testRemoveElementFront() {
+	Stoper stoper;
+
+	int numberOfTests = 10000;
+	double timeSum = 0;
+	double timeAvg = 0;
+
+	readFromFile(1);
+
+	for (int i = 0; i < numberOfTests; i++) {
+		stoper.startCounter();
+
+		removeElementFront();
+
+		timeSum += stoper.getCounter();
+
+		addElementHead(3);
+	}
+
+	timeAvg = timeSum / numberOfTests;
+
+	return timeAvg;
+}
+
+template <class T> 
+double DoublyLinkedList<T>::testRemoveElement(int position) {
+	Stoper stoper;
+
+	int numberOfTests = 10000;
+	double timeSum = 0;
+	double timeAvg = 0;
+
+	readFromFile(1);
+
+	for (int i = 0; i < numberOfTests; i++) {
+		stoper.startCounter();
+
+		removeElement(position);
+
+		timeSum += stoper.getCounter();
+
+		addElement(5, position);
+	}
+
+	timeAvg = timeSum / numberOfTests;
+
+	return timeAvg;
+}
+
+template <class T> 
+void DoublyLinkedList<T>::userInterface() {			//interfejs uzytkownika
 	int choise;
 	int choise1;
 	int value;
@@ -302,7 +440,8 @@ void DoublyLinkedList<T>::userInterface() {
 		cout << "4. Usun element" << endl;
 		cout << "5. Wyszukaj element" << endl;
 		cout << "6. Pokaz liste" << endl;
-		cout << "7. Wyjscie" << endl;
+		cout << "7. Pomiar czasu" << endl;
+		cout << "8. Wyjscie" << endl;
 
 		cout << "Wybierz opcje: ";
 		cin >> choise;
@@ -310,7 +449,7 @@ void DoublyLinkedList<T>::userInterface() {
 
 		switch (choise) {
 		case 1: {
-			readFromFile();
+			readFromFile(0);
 
 			break;
 		}
@@ -411,8 +550,19 @@ void DoublyLinkedList<T>::userInterface() {
 
 			break;
 		}
+		case 7: {
+			cout << "Dodawanie na poczatek listy dla 10000 powtorzen: " << testAddElementHead() << " ns" << endl;
+			cout << "Dodawanie na koniec listy dla 10000 powtorzen: " << testAddElementBack(counter - 1) << " ns" << endl;
+			cout << "Dodawanie na losowej listy dla 10000 powtorzen: " << testAddElement() << " ns" << endl << endl;
+
+			cout << "Usuniecie elementu z poczatku listy dla 10000 powtorzen: " << testRemoveElementFront() << " ns" << endl;
+			cout << "Usuniecie elementu z konca listy dla 10000 powtorzen: " <<testRemoveElement(counter - 1) << " ns" << endl;
+			cout << "Usuniecie elementu ze srodka listy dla 10000 powtorzen: " << testRemoveElement(5) << " ns" << endl;
+
+			break;
 		}
-	} while (choise != 7);
+		}
+	} while (choise != 8);
 }
 
 #endif // !DOUBLY_ LINKED_LIST
