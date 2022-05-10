@@ -304,8 +304,6 @@ double DoublyLinkedList<T>::testAddElementHead() {
 	double timeSum = 0;
 	double timeAvg = 0;
 
-	readFromFile(1);
-
 	for (int i = 0; i < numberOfTests; i++) {
 		stoper.startCounter();
 
@@ -329,8 +327,6 @@ double DoublyLinkedList<T>::testAddElementBack(int position) {
 	double timeSum = 0;
 	double timeAvg = 0;
 
-	readFromFile(1);
-
 	for (int i = 0; i < numberOfTests; i++) {
 		stoper.startCounter();
 
@@ -353,17 +349,19 @@ double DoublyLinkedList<T>::testAddElement() {
 	int numberOfTests = 10000;
 	double timeSum = 0;
 	double timeAvg = 0;
-
-	readFromFile(1);
+	int position;
+	srand(time(NULL));
 
 	for (int i = 0; i < numberOfTests; i++) {
+		position = rand() % 30000;
+
 		stoper.startCounter();
 
-		addElement(5, 4);
+		addElement(5, position);
 
 		timeSum += stoper.getCounter();
 
-		removeElement(4);
+		removeElement(position);
 	}
 
 	timeAvg = timeSum / numberOfTests;
@@ -378,8 +376,6 @@ double DoublyLinkedList<T>::testRemoveElementFront() {
 	int numberOfTests = 10000;
 	double timeSum = 0;
 	double timeAvg = 0;
-
-	readFromFile(1);
 
 	for (int i = 0; i < numberOfTests; i++) {
 		stoper.startCounter();
@@ -403,10 +399,11 @@ double DoublyLinkedList<T>::testRemoveElement(int position) {
 	int numberOfTests = 10000;
 	double timeSum = 0;
 	double timeAvg = 0;
-
-	readFromFile(1);
+	srand(time(NULL));
 
 	for (int i = 0; i < numberOfTests; i++) {
+		position = rand() % 30000;
+
 		stoper.startCounter();
 
 		removeElement(position);
@@ -551,7 +548,7 @@ void DoublyLinkedList<T>::userInterface() {			//interfejs uzytkownika
 			break;
 		}
 		case 7: {
-			generateList(1000);
+			generateList(30000);
 
 			cout << "Dodawanie na poczatek listy dla 10000 powtorzen: " << testAddElementHead() << " ns" << endl;
 			cout << "Dodawanie na koniec listy dla 10000 powtorzen: " << testAddElementBack(counter - 1) << " ns" << endl;

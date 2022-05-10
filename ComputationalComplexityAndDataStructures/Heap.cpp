@@ -207,8 +207,6 @@ double Heap::testAdd() {
 	double timeSum = 0;
 	double timeAvg = 0;
 
-	//readFromFile(1);
-
 	for (int i = 0; i < numberOfTests; i++) {
 		stoper.startCounter();
 
@@ -230,8 +228,6 @@ double Heap::testRemove() {
 	int numberOfTests = 10000;
 	double timeSum = 0;
 	double timeAvg = 0;
-
-	//readFromFile(1);
 
 	for (int i = 0; i < numberOfTests; i++) {
 		stoper.startCounter();
@@ -299,7 +295,7 @@ void Heap::userInterface() {		//interfejs uzytkownika
 			break;
 		}
 		case 7: {
-			generateRandomData(1000);
+			generateRandomData(30000);
 
 			cout << "Dodanie elementu do kopca dla 10000 powtorzen: " << testAdd() << " ns" << endl;
 			cout << "Usuniecie elementu z kopca dla 10000 powtorzen: " << testRemove() << " ns" << endl;

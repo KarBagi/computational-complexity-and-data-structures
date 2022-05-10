@@ -283,7 +283,7 @@ double DynamicArray::testAddElement() {
 
 
 	for (int i = 0; i < numberOfTests; i++) {
-		position = rand() % 30000;
+		position = rand() % 50000;
 
 		stoper.startCounter();
 
@@ -434,7 +434,7 @@ double DynamicArray::testRemoveElement() {
 
 	if (this->size != 0) {
 		for (int i = 0; i < numberOfTests; i++) {
-			position = rand() % 30000;
+			position = rand() % 50000;
 			stoper.startCounter();
 
 			int* newArray = new int[this->size - 1];
@@ -628,7 +628,7 @@ void DynamicArray::userInterface() {		//interfejs uzytkownika
 			int i = 0;
 
 			if (i == 0) {
-				generateArray(30000);
+				generateArray(50000);
 				i++;
 			}
 
