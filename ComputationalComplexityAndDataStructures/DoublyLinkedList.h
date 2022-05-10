@@ -551,6 +551,8 @@ void DoublyLinkedList<T>::userInterface() {			//interfejs uzytkownika
 			break;
 		}
 		case 7: {
+			generateList(1000);
+
 			cout << "Dodawanie na poczatek listy dla 10000 powtorzen: " << testAddElementHead() << " ns" << endl;
 			cout << "Dodawanie na koniec listy dla 10000 powtorzen: " << testAddElementBack(counter - 1) << " ns" << endl;
 			cout << "Dodawanie na losowej listy dla 10000 powtorzen: " << testAddElement() << " ns" << endl << endl;

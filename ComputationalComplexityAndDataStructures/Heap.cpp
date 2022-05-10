@@ -27,22 +27,22 @@ void Heap::add(int value) {
 
 void Heap::heapify(int position) {
 
-	if (position > (size / 2) && position <= size) return;			//odrzucenie korzenia oraz wyjscia poza rozmiar
-
+	if (position > (size / 2) && position <= size)					//odrzucenie korzenia oraz wyjscia poza rozmiar
+		return;
 	int bigger = position;
-
-	if (this->heap[bigger] < this->heap[leftChild(position)] && leftChild(position) < this->size) {			//sprawdzenie która wartosc jest wieksza
+	if (this->heap[bigger] < this->heap[leftChild(position)] && leftChild(position) < this->size) {   //sprawdzenie która wartosc jest wieksza
 		bigger = leftChild(position);
 	}
-	else if (this->heap[bigger] < this->heap[rightChild(position)] && rightChild(position) < this->size) {
+	if (this->heap[bigger] < this->heap[rightChild(position)] && rightChild(position) < this->size) {
 		bigger = rightChild(position);
 	}
-	else if (this->heap[position] != this->heap[bigger]) {
+
+	if (this->heap[position] != this->heap[bigger]) {
 		int temp;
-		temp = this->heap[position];			//zamiana miejscami wartosci
+		temp = this->heap[position];							//zamiana miejscami wartosci
 		this->heap[position] = this->heap[bigger];
 		this->heap[bigger] = temp;
-		heapify(bigger);				//wywolanie heapify dla indexu wiekszej wartosci oraz ponowne dla indexu poniewaz wartosc w nim sie zmienila
+		heapify(bigger);									//wywolanie heapify dla indexu wiekszej wartosci oraz ponowne dla indexu poniewaz wartosc w nim sie zmienila
 		heapify(position);
 	}
 }
@@ -52,8 +52,9 @@ void Heap::remove() {
 		this->heap[0] = this->heap[this->size - 1];			//zamiana korzenia z ostatnim najmniejszym elementem
 		size--;												//zmniejszenie rozmiaru
 		heapify(0);											//przywrócenie max do korzenia
+
 	}
-	else cout << "Kopiec jest pusty" << endl;
+	else { std::cout << "Kopiec jest pusty" << endl; }
 }
 
 void Heap::search(int value) {
@@ -206,7 +207,7 @@ double Heap::testAdd() {
 	double timeSum = 0;
 	double timeAvg = 0;
 
-	readFromFile(1);
+	//readFromFile(1);
 
 	for (int i = 0; i < numberOfTests; i++) {
 		stoper.startCounter();
@@ -230,7 +231,7 @@ double Heap::testRemove() {
 	double timeSum = 0;
 	double timeAvg = 0;
 
-	readFromFile(1);
+	//readFromFile(1);
 
 	for (int i = 0; i < numberOfTests; i++) {
 		stoper.startCounter();
@@ -298,6 +299,8 @@ void Heap::userInterface() {		//interfejs uzytkownika
 			break;
 		}
 		case 7: {
+			generateRandomData(1000);
+
 			cout << "Dodanie elementu do kopca dla 10000 powtorzen: " << testAdd() << " ns" << endl;
 			cout << "Usuniecie elementu z kopca dla 10000 powtorzen: " << testRemove() << " ns" << endl;
 		}

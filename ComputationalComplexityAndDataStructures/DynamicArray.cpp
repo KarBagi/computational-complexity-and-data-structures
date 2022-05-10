@@ -14,9 +14,7 @@ DynamicArray::DynamicArray(int s) {		//konstruktor
 	size = s;
 	mainArray = new int[size];
 
-	for (int i = 0; i < size; i++) {
-		mainArray[i] = 0;
-	}
+	mainArray = NULL;
 }
 
 DynamicArray::~DynamicArray() {		//destruktor
@@ -70,7 +68,7 @@ void DynamicArray::addElementToFront(int value) {			//dodanie elementu na poczat
 			for (int i = 0; i < this->size; i++) {
 				newArray[i + 1] = mainArray[i];				//wszystkie nastepne wartosci przepisujemy do nowej tablicy
 			}
-			delete[] mainArray;		//usuwamy glowna tablice
+			//delete[] mainArray;		//usuwamy glowna tablice
 		}	
 
 	this->size++;			//powiekszamy rozmiar domyslnej tablicy o 1
@@ -86,7 +84,7 @@ void DynamicArray::addElementToEnd(int value) {		//dodanie elementu na koniec ta
 		for (int i = 0; i < this->size; i++) {
 			newArray[i] = mainArray[i];		//wszystkie poprzednie liczby przepisujemy do nowej tablicy
 		}
-		delete[] mainArray;		//usuwamy glowna tablice
+		//delete[] mainArray;		//usuwamy glowna tablice
 	}
 
 	this->size++;			//powiekszamy rozmiar domyslnej tablicy o 1
@@ -116,9 +114,10 @@ void DynamicArray::addElement(int value, int position) {		//dodanie elementu da 
 }
 
 void DynamicArray::removeElement(int position) {		//usuniecie elementu z tablicy
-	int* newArray = new int[this->size - 1];				//stworzenie nowej tablicy o 1 wieksza od poprzedniej, w ktorej zapiszemy dodatkowa wartosc
 
-	if (mainArray != NULL) {			//sprawdzamy czy tablica nie jest pusta
+	if (this->size != 0) {			//sprawdzamy czy tablica nie jest pusta
+		int* newArray = new int[this->size - 1];				//stworzenie nowej tablicy o 1 wieksza od poprzedniej, w ktorej zapiszemy dodatkowa wartosc
+
 		for (int i = 0; i <= this->size; i++) {
 			if (i < position) {
 				newArray[i] = mainArray[i];			//jezeli i jest < od zadanej pozycji to wszystkie wartosci sa takie same
@@ -128,11 +127,11 @@ void DynamicArray::removeElement(int position) {		//usuniecie elementu z tablicy
 				newArray[i - 1] = mainArray[i];		//reszte przepisujemy z indeksem o 1 mniejszym
 			}
 		}
-	}
-	delete[] mainArray; 		//usuwamy glowna tablice
 
-	this->size--;			//zmniejszamy rozmiar domyslnej tablicy o 1
-	mainArray = newArray;		//przepisujemy nowa tablice do glownej
+		this->size--;			//zmniejszamy rozmiar domyslnej tablicy o 1
+		mainArray = newArray;		//przepisujemy nowa tablice do glownej
+	}
+	else cout << "Tablica jest pusta" << endl << endl;
 }
 
 void DynamicArray::showArray() {
@@ -145,26 +144,28 @@ void DynamicArray::showArray() {
 }
 
 int DynamicArray::findElement(int value) {		//wyszukanie wartosci
-	for (int i = 0; i < this->size; i++) {
-		if (mainArray[i] == value) {
-			value = i;
+	if (this->size > 0) {
+		for (int i = 0; i < this->size; i++) {
+			if (mainArray[i] == value) {
+				value = i;
 
-			return value;		//jezeli znajdziemy poszukiwana wartosc zwracamy 'i'
-			 
-			break;
-		}
-		else if (i == this->size - 1) {
-			return 2147483647;			//jezeli nie ma takiej wartosci w tablicy zwracamy maksymalna wartosc Int
-		}
+				return value;		//jezeli znajdziemy poszukiwana wartosc zwracamy 'i'
 
-		else if (mainArray[i] != value) continue;
+				break;
+			}
+			else if (i == this->size - 1) {
+				return 2147483647;			//jezeli nie ma takiej wartosci w tablicy zwracamy maksymalna wartosc Int
+			}
+
+			else if (mainArray[i] != value) continue;
+		}
 	}
 }
 
 void DynamicArray::generateArray(int value) {			//generowanie tablicy o zadanej wielkosci
 	srand(time(NULL));
 	for (int i = 0; i < value; i++) {
-		addElementToEnd(rand() % 100);
+		addElementToEnd(rand() % 100 + 1);
 	}
 }
 
@@ -175,16 +176,48 @@ double DynamicArray::testAddElementToFront() {
 	double timeSum = 0;
 	double timeAvg = 0;
 
-	readFromFile(1);
+	//readFromFile(1);
 
 	for (int i = 0; i < numberOfTests; i++) {
 		stoper.startCounter();
 
-		addElementToFront(5);
+		//addElementToFront(5);
+
+		int* newArray = new int[this->size + 1];				//stworzenie nowej tablicy o 1 wieksza od poprzedniej, w ktorej zapiszemy dodatkowa wartosc
+
+		newArray[0] = 5;			//na pierwsze miejsce w nowej tablicy wpisujemy zadana wartosc
+
+		if (mainArray != NULL) {			//sprawdzamy czy tablica nie jest pusta
+			for (int i = 0; i < this->size; i++) {
+				newArray[i + 1] = mainArray[i];				//wszystkie nastepne wartosci przepisujemy do nowej tablicy
+			}
+			delete[] mainArray;		//usuwamy glowna tablice
+		}
+
+		this->size++;			//powiekszamy rozmiar domyslnej tablicy o 1
+		mainArray = newArray;		//przepisujemy nowa tablice do glownej
 
 		timeSum += stoper.getCounter();
 
-		removeElement(0);
+		//removeElement(0);
+
+		int* newArray2 = new int[this->size - 1];				//stworzenie nowej tablicy o 1 wieksza od poprzedniej, w ktorej zapiszemy dodatkowa wartosc
+
+		if (mainArray != NULL) {			//sprawdzamy czy tablica nie jest pusta
+			for (int i = 0; i <= this->size; i++) {
+				if (i < 0) {
+					newArray2[i] = mainArray[i];			//jezeli i jest < od zadanej pozycji to wszystkie wartosci sa takie same
+				}
+				else if (i == 0) continue;		//jezeli i jest rowne wartosci position kontynuujemy algorytm bez jej wpisywania
+				else if (i > 0) {
+					newArray2[i - 1] = mainArray[i];		//reszte przepisujemy z indeksem o 1 mniejszym
+				}
+			}
+			delete[] mainArray; 		//usuwamy glowna tablice
+		}
+
+		this->size--;			//zmniejszamy rozmiar domyslnej tablicy o 1
+		mainArray = newArray2;		//przepisujemy nowa tablice do glownej
 	}
 
 	timeAvg = timeSum / numberOfTests;
@@ -197,16 +230,43 @@ double DynamicArray::testAddElementToEnd(int position) {
 	double timeSum = 0;
 	double timeAvg = 0;
 
-	readFromFile(1);
-
 	for (int i = 0; i < numberOfTests; i++) {
 		stoper.startCounter();
 
-		addElementToEnd(5);
+		int* newArray = new int[this->size + 1];				//stworzenie nowej tablicy o 1 wieksza od poprzedniej, w ktorej zapiszemy dodatkowa wartosc
+
+		newArray[this->size] = 5;			//na ostatnie miejsce w nowej tablicy zapisujemy zadana wartosc
+
+		if (mainArray != NULL) {			//sprawdzamy czy tablica nie jest pusta
+			for (int i = 0; i < this->size; i++) {
+				newArray[i] = mainArray[i];		//wszystkie poprzednie liczby przepisujemy do nowej tablicy
+			}
+			delete[] mainArray;		//usuwamy glowna tablice
+		}
+
+		this->size++;			//powiekszamy rozmiar domyslnej tablicy o 1
+		mainArray = newArray;		//przepisujemy nowa tablice do glownej
 
 		timeSum += stoper.getCounter();
 
-		removeElement(position);
+
+		int* newArray2 = new int[this->size - 1];				//stworzenie nowej tablicy o 1 wieksza od poprzedniej, w ktorej zapiszemy dodatkowa wartosc
+
+		if (mainArray != NULL) {			//sprawdzamy czy tablica nie jest pusta
+			for (int i = 0; i <= this->size; i++) {
+				if (i < position) {
+					newArray2[i] = mainArray[i];			//jezeli i jest < od zadanej pozycji to wszystkie wartosci sa takie same
+				}
+				else if (i == position) continue;		//jezeli i jest rowne wartosci position kontynuujemy algorytm bez jej wpisywania
+				else if (i > position) {
+					newArray2[i - 1] = mainArray[i];		//reszte przepisujemy z indeksem o 1 mniejszym
+				}
+			}
+			delete[] mainArray; 		//usuwamy glowna tablice
+		}
+
+		this->size--;			//zmniejszamy rozmiar domyslnej tablicy o 1
+		mainArray = newArray2;		//przepisujemy nowa tablice do glownej
 	}
 
 	timeAvg = timeSum / numberOfTests;
@@ -215,20 +275,58 @@ double DynamicArray::testAddElementToEnd(int position) {
 }
 
 double DynamicArray::testAddElement() {
+	srand(time(NULL));
 	int numberOfTests = 10000;
 	double timeSum = 0;
 	double timeAvg = 0;
+	int position;
 
-	readFromFile(1);
 
 	for (int i = 0; i < numberOfTests; i++) {
+		position = rand() % 30000;
+
 		stoper.startCounter();
 
-		addElement(5, 4);
+		int* newArray = new int[this->size + 1];				//stworzenie nowej tablicy o 1 wieksza od poprzedniej, w ktorej zapiszemy dodatkowa wartosc
+
+		if (mainArray != NULL) {			//sprawdzamy czy tablica nie jest pusta
+			for (int i = 0; i <= this->size; i++) {
+				if (i < position) {
+					newArray[i] = mainArray[i];			//jezeli wartosc i jest mniejsza od zadanej pozycji to elementy sa na tych samych indeksach
+				}
+				else if (i == position) {
+					newArray[i] = 5;			//jezeli i == pozycja, wpisujemy w to miejsce zadana wartosc
+				}
+				else if (i > position) {
+					newArray[i] = mainArray[i - 1];		//wszystkie wartosci powyzej maja indeks o 1 wiekszy
+				}
+			}
+			delete[] mainArray; 		//usuwamy glowna tablice
+		}
+
+		this->size++;			//powiekszamy rozmiar domyslnej tablicy o 1
+		mainArray = newArray;		//przepisujemy nowa tablice do glownej
 
 		timeSum += stoper.getCounter();
 
-		removeElement(4);
+
+		int* newArray2 = new int[this->size - 1];				//stworzenie nowej tablicy o 1 wieksza od poprzedniej, w ktorej zapiszemy dodatkowa wartosc
+
+		if (mainArray != NULL) {			//sprawdzamy czy tablica nie jest pusta
+			for (int i = 0; i <= this->size; i++) {
+				if (i < position) {
+					newArray2[i] = mainArray[i];			//jezeli i jest < od zadanej pozycji to wszystkie wartosci sa takie same
+				}
+				else if (i == position) continue;		//jezeli i jest rowne wartosci position kontynuujemy algorytm bez jej wpisywania
+				else if (i > position) {
+					newArray2[i - 1] = mainArray[i];		//reszte przepisujemy z indeksem o 1 mniejszym
+				}
+			}
+			delete[] mainArray; 		//usuwamy glowna tablice
+		}
+
+		this->size--;			//zmniejszamy rozmiar domyslnej tablicy o 1
+		mainArray = newArray2;		//przepisujemy nowa tablice do glownej
 	}
 
 	timeAvg = timeSum / numberOfTests;
@@ -241,16 +339,43 @@ double DynamicArray::testRemoveElementFront() {
 	double timeSum = 0;
 	double timeAvg = 0;
 
-	readFromFile(1);
-
 	for (int i = 0; i < numberOfTests; i++) {
 		stoper.startCounter();
 
-		removeElement(0);
+		int* newArray = new int[this->size - 1];				//stworzenie nowej tablicy o 1 wieksza od poprzedniej, w ktorej zapiszemy dodatkowa wartosc
+
+		if (mainArray != NULL) {			//sprawdzamy czy tablica nie jest pusta
+			for (int i = 0; i <= this->size; i++) {
+				if (i < 0) {
+					newArray[i] = mainArray[i];			//jezeli i jest < od zadanej pozycji to wszystkie wartosci sa takie same
+				}
+				else if (i == 0) continue;		//jezeli i jest rowne wartosci position kontynuujemy algorytm bez jej wpisywania
+				else if (i > 0) {
+					newArray[i - 1] = mainArray[i];		//reszte przepisujemy z indeksem o 1 mniejszym
+				}
+			}
+			delete[] mainArray; 		//usuwamy glowna tablice
+		}
+
+		this->size--;			//zmniejszamy rozmiar domyslnej tablicy o 1
+		mainArray = newArray;		//przepisujemy nowa tablice do glownej
 
 		timeSum += stoper.getCounter();
 
-		addElementToFront(6);
+
+		int* newArray2 = new int[this->size + 1];				//stworzenie nowej tablicy o 1 wieksza od poprzedniej, w ktorej zapiszemy dodatkowa wartosc
+
+		newArray2[0] = 6;			//na pierwsze miejsce w nowej tablicy wpisujemy zadana wartosc
+
+		if (mainArray != NULL) {			//sprawdzamy czy tablica nie jest pusta
+			for (int i = 0; i < this->size; i++) {
+				newArray2[i + 1] = mainArray[i];				//wszystkie nastepne wartosci przepisujemy do nowej tablicy
+			}
+			delete[] mainArray;		//usuwamy glowna tablice
+		}
+
+		this->size++;			//powiekszamy rozmiar domyslnej tablicy o 1
+		mainArray = newArray2;		//przepisujemy nowa tablice do glownej
 	}
 
 	timeAvg = timeSum / numberOfTests;
@@ -263,16 +388,35 @@ double DynamicArray::testRemoveElementEnd(int position) {
 	double timeSum = 0;
 	double timeAvg = 0;
 
-	readFromFile(1);
+	if (this->size != 0) {
+		for (int i = 0; i < numberOfTests; i++) {
+			stoper.startCounter();
 
-	for (int i = 0; i < numberOfTests; i++) {
-		stoper.startCounter();
+			this->size--;
 
-		removeElement(position);
+			int* newArray = new int[this->size];
+			
+			for (int i = 0; i < this->size; i++) {
+				newArray[i] = mainArray[i];
+			}
 
-		timeSum += stoper.getCounter();
+			delete[] mainArray;
+			mainArray = newArray;
 
-		addElementToEnd(position - 1);
+			timeSum += stoper.getCounter();
+
+			this->size++;
+
+			int* newArray2 = new int[this->size];
+
+			for (int i = 0; i < this->size; i++) {
+				newArray2[i] = mainArray[i];
+			}
+
+			delete[] mainArray;
+			newArray2[this->size - 1] = 6;
+			mainArray = newArray2;
+		}
 	}
 
 	timeAvg = timeSum / numberOfTests;
@@ -284,17 +428,54 @@ double DynamicArray::testRemoveElement() {
 	int numberOfTests = 10000;
 	double timeSum = 0;
 	double timeAvg = 0;
+	int position;
+	srand(time(NULL));
 
-	readFromFile(1);
 
-	for (int i = 0; i < numberOfTests; i++) {
-		stoper.startCounter();
+	if (this->size != 0) {
+		for (int i = 0; i < numberOfTests; i++) {
+			position = rand() % 30000;
+			stoper.startCounter();
 
-		removeElement(5);
+			int* newArray = new int[this->size - 1];
 
-		timeSum += stoper.getCounter();
+			for (int i = 0; i < this->size; i++) {
+				if (i < position) {
+					newArray[i] = mainArray[i];
+				}
+				else if (i == position) {
+					continue;
+				}
+				else if (i > position) {
+					newArray[i - 1] = mainArray[i];
+				}
+			}
 
-		addElement(34, 5);
+			delete[] mainArray;
+			this->size--;
+			mainArray = newArray;
+
+			timeSum += stoper.getCounter();
+
+
+			int* newArray2 = new int[this->size + 1];
+
+			for (int i = 0; i < this->size; i++) {
+				if (i < position) {
+					newArray2[i] = mainArray[i];			//jezeli wartosc i jest mniejsza od zadanej pozycji to elementy sa na tych samych indeksach
+				}
+				else if (i == position) {
+					newArray2[i] = 20;			//jezeli i == pozycja, wpisujemy w to miejsce zadana wartosc
+				}
+				else if (i > position) {
+					newArray2[i] = mainArray[i - 1];		//wszystkie wartosci powyzej maja indeks o 1 wiekszy
+				}
+			}
+
+			delete[] mainArray;
+			this->size++;
+			mainArray = newArray2;
+		}
 	}
 
 	timeAvg = timeSum / numberOfTests;
@@ -329,6 +510,7 @@ void DynamicArray::userInterface() {		//interfejs uzytkownika
 		switch (choise) {
 		case 1: {
 			readFromFile(0);
+			cout << endl;
 
 			break;
 		}
@@ -443,6 +625,13 @@ void DynamicArray::userInterface() {		//interfejs uzytkownika
 			break;
 		}
 		case 7: {
+			int i = 0;
+
+			if (i == 0) {
+				generateArray(30000);
+				i++;
+			}
+
 			cout << "Dodawanie na poczatek tablicy dla 10000 powtorzen: " << testAddElementToFront()  << " ns"<< endl;
 			cout << "Dodawanie na koniec tablicy dla 10000 powtorzen: " << testAddElementToEnd(this->size) << " ns" << endl;
 			cout << "Dodawanie na losowej pozycji dla 10000 powtorzen: " << testAddElement() << " ns" << endl << endl;
